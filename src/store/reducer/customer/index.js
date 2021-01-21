@@ -3,9 +3,19 @@ import {
   DELETE_CUSTOMER,
   EDIT_CUSTOMER,
 } from "../../selectors/customer";
+import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
-  customers: [],
+  customers: [
+    {
+      id: uuidv4(),
+      firstname: "sam",
+      lastname: "raj",
+      email: "sam@gmli.com",
+      skill: "angular",
+      gender: "male",
+    },
+  ],
 };
 
 export const CustomerReducer = (state = initialState, action) => {
