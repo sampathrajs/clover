@@ -6,11 +6,12 @@ import App from "../App";
 import { Provider } from "react-redux";
 import Customer from "../customer";
 import AddCustomer from "../customer/add";
-import PropTypes from "prop-types";
-
-export const AppRouter = ({ store }) => {
+type Props = {
+  store: any;
+};
+export const AppRouter: React.FC<Props> = ({ store }) => {
   return (
-    <Provider store={store}>
+    <Provider store={store as any}>
       <Router>
         <Fragment>
           <App>
@@ -24,7 +25,4 @@ export const AppRouter = ({ store }) => {
       </Router>
     </Provider>
   );
-};
-AppRouter.propTypes = {
-  store: PropTypes.object,
 };

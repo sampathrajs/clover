@@ -3,22 +3,33 @@ import {
   DELETE_CUSTOMER,
   EDIT_CUSTOMER,
 } from "../../selectors/customer";
-import { v4 as uuidv4 } from "uuid";
+import { CustomerModel } from "../../../model/customer";
 
-const initialState = {
+interface CustomerState {
+  customers: CustomerModel[];
+}
+const initialState: CustomerState = {
   customers: [
     {
-      id: uuidv4(),
-      firstname: "sam",
+      id: "10000",
+      firstname: "sampath",
       lastname: "raj",
-      email: "sam@gmli.com",
-      skill: "angular",
+      email: "sam@gmail.com",
+      skill: ["angular", "react"],
       gender: "male",
     },
   ],
 };
 
-export const CustomerReducer = (state = initialState, action) => {
+type Action =
+  | { type: typeof SAVE_CUSTOMER; payload: CustomerModel }
+  | { type: typeof EDIT_CUSTOMER; payload: CustomerModel }
+  | { type: typeof DELETE_CUSTOMER; payload: string };
+
+export const CustomerReducer = (
+  state = initialState,
+  action: Action
+): CustomerState => {
   switch (action.type) {
     case SAVE_CUSTOMER:
       return {

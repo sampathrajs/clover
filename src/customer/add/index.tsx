@@ -7,15 +7,9 @@ import Button from "@material-ui/core/Button";
 import CardContent from "@material-ui/core/CardContent";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-
-const initialValue = {
-  id: "",
-  firstname: "",
-  lastname: "",
-  email: "",
-  skill: ["react"],
-  gender: "",
-};
+import { RouteComponentProps } from "react-router-dom";
+import { AppState } from "../../store/reducer";
+import { CustomerModel } from "../../model/customer";
 
 const validationSchema = Yup.object({
   firstname: Yup.string()
@@ -27,21 +21,39 @@ const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
   gender: Yup.string().required("Required"),
 });
-const AddCustomer = ({ history, match }) => {
+interface CustomerParams {
+  id: string; // parameters will always be a string (even if they are numerical)
+}
+interface CustomerComponentProps extends RouteComponentProps<CustomerParams> {
+  /* other props for ChildComponent */
+}
+
+const initialValue: CustomerModel = {
+  id: "",
+  firstname: "",
+  lastname: "",
+  email: "",
+  skill: [],
+  gender: "",
+};
+
+const AddCustomer: React.FC<CustomerComponentProps> = ({ history, match }) => {
   const { id } = match.params;
   const isAddMode = !id;
-  const customers = useSelector((state) => state.customer.customers);
-  const formvalue = isAddMode
+  const customers: CustomerModel[] = useSelector(
+    (state: AppState) => state.customer.customers
+  );
+  const formvalue: any = isAddMode
     ? initialValue
     : customers.find((customer) => customer.id === id);
   const dispatch = useDispatch();
-  const onFinish = (values) => {
+  const onFinish = (values: CustomerModel) => {
     if (isAddMode) {
       values.id = uuidv4();
-      pushCustomer(dispatch, values);
+      dispatch(pushCustomer(values));
     } else {
       values.id = id;
-      editCustomer(dispatch, values);
+      dispatch(editCustomer(values));
     }
     history.push("/");
   };
@@ -51,9 +63,8 @@ const AddCustomer = ({ history, match }) => {
         <Formik
           initialValues={formvalue}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values: CustomerModel) => {
             onFinish(values);
-            setSubmitting(false);
           }}
         >
           <Form>

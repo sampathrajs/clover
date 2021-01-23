@@ -7,13 +7,15 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-
+import { RouteComponentProps } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import CardContent from "@material-ui/core/CardContent";
+import { AppState } from "../store/reducer";
 
 import { useSelector, useDispatch } from "react-redux";
 import { removeCustomer } from "../store/actions/customer";
+import { CustomerModel } from "../model/customer";
 
 const useStyles = makeStyles({
   table: {
@@ -21,20 +23,27 @@ const useStyles = makeStyles({
   },
 });
 
-const Customer = (props) => {
+interface CustomerComponentProps extends RouteComponentProps<any> {
+  /* other props for ChildComponent */
+}
+
+const Customer: React.FC<CustomerComponentProps> = ({ history }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const handleDelete = (id) => {
-    removeCustomer(dispatch, id);
+  const handleDelete = (id: string) => {
+    dispatch(removeCustomer(id));
   };
   const handleAdd = () => {
-    props.history.push("/add");
+    history.push("/add");
   };
-  const handleEdit = (id) => {
-    props.history.push(`/edit/${id}`);
+  const handleEdit = (id: string) => {
+    history.push(`/edit/${id}`);
   };
 
-  const customers = useSelector((state) => state.customer.customers);
+  const customers: CustomerModel[] = useSelector(
+    (state: AppState) => state.customer.customers
+  );
+
   return (
     <Card>
       <CardContent>
@@ -55,8 +64,8 @@ const Customer = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.map((row) => (
-                <TableRow key={row.name}>
+              {customers.map((row: CustomerModel) => (
+                <TableRow key={row.id}>
                   <TableCell component="th" scope="row">
                     {row.firstname}
                   </TableCell>
