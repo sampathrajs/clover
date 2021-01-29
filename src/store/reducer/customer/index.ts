@@ -9,16 +9,7 @@ interface CustomerState {
   customers: CustomerModel[];
 }
 const initialState: CustomerState = {
-  customers: [
-    {
-      id: "10000",
-      firstname: "sampath",
-      lastname: "raj",
-      email: "sam@gmail.com",
-      skill: ["angular", "react"],
-      gender: "male",
-    },
-  ],
+  customers: [],
 };
 
 type Action =
